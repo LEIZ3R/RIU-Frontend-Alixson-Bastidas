@@ -11,6 +11,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs';
 import { Hero } from '../../../shared/interfaces/heron.interface';
 import { FormsModule } from '@angular/forms';
 import { HeroFormComponent } from '../hero-form/hero-form.component';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-hero-list',
@@ -76,8 +77,15 @@ export class HeroListComponent {
   }
 
   deleteHero(id: string) {
-    if (confirm('¿Estás seguro de eliminar este héroe?')) {
-      this.heroService.delete(id).subscribe(() => this.loadHeroes());
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',
+      data: { message: '¿Estás seguro de eliminar este héroe?' },
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.heroService.delete(id).subscribe(() => this.loadHeroes());
+      }
+    });
   }
 }
