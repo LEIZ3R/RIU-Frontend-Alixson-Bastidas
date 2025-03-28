@@ -1,0 +1,88 @@
+import { Hero } from '../shared/interfaces/heron.interface';
+
+export const MOCK_HEROES: Hero[] = [
+  {
+    id: '1',
+    name: 'SPIDERMAN',
+    power: 'Wall-crawling, spider-sense',
+    description: 'Friendly neighborhood hero from Queens',
+    createdAt: new Date('2020-01-15'),
+  },
+  {
+    id: '2',
+    name: 'IRON MAN',
+    power: 'Powered armor suit, genius intellect',
+    description: 'Billionaire inventor and Avenger',
+    createdAt: new Date('2019-05-22'),
+  },
+  {
+    id: '3',
+    name: 'CAPTAIN AMERICA',
+    power: 'Super-soldier strength, vibranium shield',
+    description: 'Living legend from World War II',
+    createdAt: new Date('2021-03-10'),
+  },
+  {
+    id: '4',
+    name: 'THOR',
+    power: 'God of thunder, Mjolnir wielder',
+    description: 'Asgardian prince',
+    createdAt: new Date('2018-11-30'),
+  },
+  {
+    id: '5',
+    name: 'HULK',
+    power: 'Unlimited strength, regeneration',
+    description: 'Gamma-powered scientist',
+    createdAt: new Date('2020-07-18'),
+  },
+  {
+    id: '6',
+    name: 'BLACK WIDOW',
+    power: 'Master spy, martial artist',
+    description: 'Former Russian agent turned Avenger',
+    createdAt: new Date('2019-09-05'),
+  },
+  {
+    id: '7',
+    name: 'DOCTOR STRANGE',
+    power: 'Mystic arts, time manipulation',
+    description: 'Sorcerer Supreme',
+    createdAt: new Date('2021-01-25'),
+  },
+  {
+    id: '8',
+    name: 'WOLVERINE',
+    power: 'Adamantium claws, healing factor',
+    description: 'X-Men member with a temper',
+    createdAt: new Date('2018-04-12'),
+  },
+  {
+    id: '9',
+    name: 'STORM',
+    power: 'Weather manipulation',
+    description: 'Mutant goddess of weather',
+    createdAt: new Date('2020-10-08'),
+  },
+  {
+    id: '10',
+    name: 'MAGNETO',
+    power: 'Magnetic field control',
+    description: 'Mutant rights extremist',
+    createdAt: new Date('2019-12-20'),
+  },
+  {
+    id: '11',
+    name: 'BLACK PANTHER',
+    power: 'Enhanced abilities, vibranium suit',
+    description: 'King of Wakanda',
+    createdAt: new Date('2021-02-14'),
+  },
+  {
+    id: '12',
+    name: 'DEADPOOL',
+    power: 'Healing factor, breaking the fourth wall',
+    description: 'Merc with a mouth',
+    createdAt: new Date('2018-08-30'),
+  },
+];
