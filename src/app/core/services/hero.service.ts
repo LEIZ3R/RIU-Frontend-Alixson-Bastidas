@@ -39,6 +39,7 @@ export class HeroService {
    * @returns Observable<Hero>
    */
   getById(id: string): Observable<Hero> {
+    console.log('hola');
     const hero = this.heroesSubject.value.find((hero) => hero.id === id);
     if (!hero) {
       throw new Error(`Hero with id ${id} not found`);
@@ -65,6 +66,7 @@ export class HeroService {
    * @returns Observable<Hero>
    */
   update(hero: Hero): Observable<Hero> {
+    console.log('object');
     const heroes = this.heroesSubject.value;
     const index = heroes.findIndex((h) => h.id === hero.id);
     if (index === -1) {

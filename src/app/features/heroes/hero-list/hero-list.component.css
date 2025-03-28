@@ -1,0 +1,23 @@
+.container {
+  padding: 20px;
+}
+
+.search-container {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+  align-items: center;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
+mat-table {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+mat-paginator {
+  background: transparent;
+}
