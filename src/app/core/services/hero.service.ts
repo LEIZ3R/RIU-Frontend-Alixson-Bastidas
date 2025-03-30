@@ -66,7 +66,6 @@ export class HeroService {
    * @returns Observable<Hero>
    */
   update(hero: Hero): Observable<Hero> {
-    console.log('object');
     const heroes = this.heroesSubject.value;
     const index = heroes.findIndex((h) => h.id === hero.id);
     if (index === -1) {

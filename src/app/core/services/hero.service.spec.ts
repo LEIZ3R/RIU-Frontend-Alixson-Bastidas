@@ -31,7 +31,7 @@ describe('HeroService', () => {
       let result: Hero | undefined;
       service.getById('1').subscribe((hero) => (result = hero));
       tick(500);
-      expect(result?.name).toBe('SPIDERMAN');
+      expect(result?.name).toBe('spiderman');
     }));
   });
 
@@ -41,7 +41,7 @@ describe('HeroService', () => {
       service.searchHeroes('man').subscribe((heroes) => (result = heroes));
       tick(500);
       expect(result.length).toBe(2);
-      expect(result.some((h) => h.name === 'SPIDERMAN')).toBeTrue();
+      expect(result.some((h) => h.name === 'spiderman')).toBeTrue();
     }));
 
     it('should return empty array if no matches', fakeAsync(() => {

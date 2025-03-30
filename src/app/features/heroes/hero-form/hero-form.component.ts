@@ -1,6 +1,11 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, effect, signal, untracked } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  Validators,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -13,15 +18,16 @@ import { UppercaseDirective } from '../../../shared/directives/uppercase.directi
   standalone: true,
   imports: [
     ReactiveFormsModule,
+    FormsModule,
     MatInputModule,
     MatButtonModule,
     MatDialogModule,
     UppercaseDirective,
   ],
   template: `
-    <h2 mat-dialog-title>@if (data) { Editar Héroe } @else { Crear Héroe }</h2>
+    <h2 mat-dialog-title>{{ data() ? 'Editar Héroe' : 'Crear Héroe' }}</h2>
 
-    <form [formGroup]="heroForm" (ngSubmit)="onSubmit()">
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
       <mat-dialog-content>
         <mat-form-field>
           <input
@@ -31,7 +37,7 @@ import { UppercaseDirective } from '../../../shared/directives/uppercase.directi
             required
             appUppercase
           />
-          @if (heroForm.get('name')?.hasError('required')) {
+          @if (form.get('name')?.hasError('required')) {
           <mat-error>El nombre es obligatorio</mat-error>
           }
         </mat-form-field>
@@ -42,12 +48,12 @@ import { UppercaseDirective } from '../../../shared/directives/uppercase.directi
       </mat-dialog-content>
 
       <mat-dialog-actions>
-        <button mat-button (click)="onCancel()">Cancelar</button>
+        <button mat-button type="button" (click)="onCancel()">Cancelar</button>
         <button
           mat-raised-button
           color="primary"
           type="submit"
-          [disabled]="heroForm.invalid"
+          [disabled]="!form.valid || !hasChanges()"
         >
           Guardar
         </button>
@@ -64,7 +70,9 @@ import { UppercaseDirective } from '../../../shared/directives/uppercase.directi
   ],
 })
 export class HeroFormComponent {
-  heroForm = this.fb.group({
+  data = signal<Hero | null>(null);
+  originalValues = signal<Partial<Hero> | null>(null);
+  form = this.fb.group({
     id: [''],
     name: ['', Validators.required],
     power: [''],
@@ -74,18 +82,51 @@ export class HeroFormComponent {
     private fb: FormBuilder,
     private heroService: HeroService,
     private dialogRef: MatDialogRef<HeroFormComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: Hero | null
+    @Inject(MAT_DIALOG_DATA) initialData: Hero | null
   ) {
-    if (data) this.heroForm.patchValue(data);
+    this.data.set(initialData);
+
+    effect(
+      () => {
+        const currentData = this.data();
+        untracked(() => {
+          if (currentData) {
+            this.form.patchValue(currentData);
+            this.originalValues.set({ ...currentData });
+            this.form.markAsPristine();
+          } else {
+            this.form.reset();
+            this.originalValues.set(null);
+          }
+        });
+      },
+      { allowSignalWrites: true }
+    );
+  }
+
+  hasChanges(): boolean {
+    if (!this.data()) {
+      return this.form.dirty;
+    }
+
+    const current = this.form.value;
+    const original = this.originalValues();
+
+    return current.name !== original?.name || current.power !== original?.power;
   }
 
   onSubmit() {
-    const hero = this.heroForm.value as Hero;
-    const operation = hero.id
-      ? this.heroService.update(hero)
-      : this.heroService.create(hero);
+    if (this.form.valid && this.hasChanges()) {
+      const hero = this.form.value as Hero;
+      const operation = hero.id
+        ? this.heroService.update(hero)
+        : this.heroService.create(hero);
 
-    operation.subscribe(() => this.dialogRef.close(true));
+      operation.subscribe({
+        next: () => this.dialogRef.close(true),
+        error: (err) => console.error('Error saving hero', err),
+      });
+    }
   }
 
   onCancel() {

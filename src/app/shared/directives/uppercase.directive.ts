@@ -30,6 +30,17 @@ export class UppercaseDirective {
   @HostListener('paste', ['$event']) onPaste(event: ClipboardEvent) {
     event.preventDefault();
     const pastedText = event.clipboardData?.getData('text') || '';
-    document.execCommand('insertText', false, pastedText.toUpperCase());
+    const target = this.el.nativeElement;
+    const startPos = target.selectionStart;
+    const endPos = target.selectionEnd;
+    const currentValue = target.value;
+    target.value =
+      currentValue.substring(0, startPos) +
+      pastedText.toUpperCase() +
+      currentValue.substring(endPos);
+
+    this.control.control?.setValue(target.value, { emitEvent: false });
+    const newCursorPos = startPos + pastedText.length;
+    target.setSelectionRange(newCursorPos, newCursorPos);
   }
 }
