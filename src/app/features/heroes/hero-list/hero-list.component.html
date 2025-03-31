@@ -61,10 +61,7 @@
     </button>
   </div>
   }
-
-  @if (totalHeroes > pageSize) {
   <mat-paginator [length]="totalHeroes" [pageSize]="pageSize" [pageSizeOptions]="[5, 10, 20]"
     (page)="onPageChange($event)">
   </mat-paginator>
-  }
 </div>
